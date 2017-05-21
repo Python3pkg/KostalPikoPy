@@ -24,7 +24,7 @@
 
 """Library to work with a Piko inverter from Kostal."""
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from lxml import html
 
 
@@ -99,14 +99,14 @@ class Piko():
 
     def _get_raw_content(self):
         """returns all values as a list"""
-        password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+        password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
         password_mgr.add_password(None, self.host, self.username, self.password)
-        handler = urllib2.HTTPBasicAuthHandler(password_mgr)
-        opener = urllib2.build_opener(handler)
+        handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
+        opener = urllib.request.build_opener(handler)
         opener.open(self.host)
 
-        urllib2.install_opener(opener)
-        response = urllib2.urlopen(self.host)
+        urllib.request.install_opener(opener)
+        response = urllib.request.urlopen(self.host)
         root = html.fromstring(response.read().strip())
         data = [v.text.strip() for v in root.xpath("//td[@bgcolor='#FFFFFF']")]
         return data
